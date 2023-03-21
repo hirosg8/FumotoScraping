@@ -12,6 +12,32 @@ function FumotoScraping(){
  //スプレッドシートのIDを指定
  const spreadSheet = SpreadsheetApp.openById(spreadSheetID)
 
+ //【テスト】スプレッドシートの日付を取得
+ const st = spreadSheet.getSheetByName('Date');
+ let getDates = st.getDataRange().getValues()
+ for (let i = 0; i < getDates.length; i++) {
+  let date = new Date(getDates[i]);
+  console.log('【'+i+'】'+'日付'+': '+getDates[i]);
+  let year = date.getFullYear();
+  let month = date.getMonth()+1;
+  let day = date.getDate();
+  console.log('【'+i+'】'+'年'+': '+year);
+  console.log('【'+i+'】'+'月'+': '+month);
+  console.log('【'+i+'】'+'日'+': '+day);
+ }
+ 
+ //【テスト】今月の日数を取得
+ const today = new Date();
+ const year = today.getFullYear(); //年
+ let availableDate = 0;
+ for (let i = 0; i < 4; i++) {
+  const month = today.getMonth()+1+i; //月
+  const lastDate = new Date(year, month, 0);
+  availableDate += lastDate.getDate();
+  console.log('今月の日数は' + lastDate.getDate());
+ }
+ console.log('現在取得可能な予定の日数は' + availableDate);
+
  //スプレッドシートのシート名を指定
  const sheet = spreadSheet.getSheetByName(spreadSheetName)
 
@@ -34,6 +60,7 @@ function FumotoScraping(){
   let dt = freeDates[i];
   console.log('freedate'+i+": "+dt);
   //シートに取得した情報を追加
+  //【TODO】取得した値が「-,○,△,×」のいずれかでない場合、スキップする処理を追加
   sheet.getRange("A" + targetRow).setValue(dt);
   //次の行に移動
   targetRow++
